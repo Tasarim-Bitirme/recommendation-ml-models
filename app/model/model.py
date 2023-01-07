@@ -4,6 +4,8 @@ from pathlib import Path
 #import traceback
 # import streamlit as st
 import pandas as pd
+import numpy as np
+
 
 
 
@@ -42,6 +44,7 @@ def content_based_filtering(title, number_of_books):
         #recommended_books = [books_model.iloc[book[0]].title for book in books_list]
          #return all the recommended books ISBNs
         recommended_books = [books_model.iloc[book[0]].ISBN for book in books_list]
+
         return recommended_books
         
 
@@ -99,3 +102,48 @@ def collaborative_filtering(title, number_of_books):
     
 
 
+#BAYESIAN APPROACH
+
+def hybrid_based_recommendation_bayesian_arpoach(title, num_of_rec):
+  # Get recommendations from collaborative filtering model
+  collab_recs = collaborative_filtering(title, num_of_rec)
+  
+  # Get recommendations from content-based filtering model
+  content_recs = content_based_filtering(title, num_of_rec)
+  
+  # Combine the recommendations using a Bayesian network
+  recommendations = []
+  for collab_rec in collab_recs:
+    for content_rec in content_recs:
+      if collab_rec == content_rec:
+        # Recommendations from both models agree, so we can be more confident in this recommendation
+        recommendations.append(collab_rec)
+  if len(recommendations) < num_of_rec:
+    # If we don't have enough recommendations yet, add the remaining items from either model
+    recommendations.extend(collab_recs[len(recommendations):])
+    recommendations.extend(content_recs[len(recommendations):])
+  
+  # Return the top 'num_of_rec' recommendations
+  return recommendations[:num_of_rec]
+
+
+#WARP APPROACH
+
+def hybrid_based_recommendation_warp_aproach(title, num_of_rec):
+  # Get recommendations from collaborative filtering model
+  collab_recs = collaborative_filtering(title, num_of_rec)
+  
+  # Get recommendations from content-based filtering model
+  content_recs = content_based_filtering(title, num_of_rec)
+  
+  # Combine the recommendations using WARP loss
+  recommendations = []
+  for i, collab_rec in enumerate(collab_recs):
+    for j, content_rec in enumerate(content_recs):
+      if collab_rec == content_rec:
+        # Recommendations from both models agree, so we can assign a higher weight to this recommendation
+        recommendations.append((collab_rec, i + j))
+  recommendations.sort(key=lambda x: x[1])
+  
+  # Return the top 'num_of_rec' recommendations
+  return [rec[0] for rec in recommendations][:num_of_rec]

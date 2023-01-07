@@ -1,12 +1,13 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from app.model.model import collaborative_filtering 
-from app.model.model import content_based_filtering
+# from app.model.model import collaborative_filtering 
+# from app.model.model import content_based_filtering
 from app.model.model import __version__ as model_version
-# from model.model import get_book_titles
-# from model.model import get_book_ISBNs
+from app.model.model import hybrid_based_recommendation_bayesian_arpoach
+from app.model.model import hybrid_based_recommendation_warp_aproach
 
-#import uvicorn
+
+import uvicorn
 #import traceback
 
 
@@ -34,35 +35,24 @@ def home():
 
 
 
-@app.post("/recommend", response_model = RecommendationOutput)
-def recommend(title: BookNameInput, number: RecommendationCountInput):
-    #books = recommend_books(title.text, number.count)
+# 
 
-    #Get collaborative filtering recommendations
-    books_collaborative_filtering = collaborative_filtering(title.text, number.count//2)
-    #Get content based filtering recommendations
-    books_content_based_filtering = content_based_filtering(title.text, number.count//2)
-
-    #if the recommended books are 5 I want to return 5 books from the collaborative filtering and 5 books from the content based filtering  
-    #put  a copy of the duplicate books on the front of the list
-    #Combine the two lists
-    books = books_collaborative_filtering + books_content_based_filtering
-
-    #Remove duplicates
-    #books = list(dict.fromkeys(books))
-    #if there's duplicates in the list
-    #put a copy of the duplicate books on the front of the list
-    #then remove the other copies
-    #then return the list
-    if len(books) != len(set(books)):
-        for i in range(len(books)):
-            if books[i] in books[i+1:]:
-                books.insert(0, books[i])
-        books = list(dict.fromkeys(books))
+@app.post("/hybrid-bayesian-recommendation", response_model=RecommendationOutput)
+def hybrid_based_recommendation_api(book_name: BookNameInput, recommendation_count: RecommendationCountInput):
+    try:
+        books = hybrid_based_recommendation_bayesian_arpoach(book_name.text, recommendation_count.count)
+        return {"books": books}
+    except Exception as e:
+        return {"error": str(e)}
     
-    return {"books": books}
 
-
+@app.post("/hybrid-warp-recommendation", response_model=RecommendationOutput)
+def hybrid_based_recommendation_api(book_name: BookNameInput, recommendation_count: RecommendationCountInput):
+    try:
+        books = hybrid_based_recommendation_warp_aproach(book_name.text, recommendation_count.count)
+        return {"books": books}
+    except Exception as e:
+        return {"error": str(e)}
 
 
 # if __name__ == '__main__':
