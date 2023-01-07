@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2023 DEMBA SOW - ZIDAN OMAR HAMID
+Copyright (c) 2023  ZIDAN OMAR HAMID - DEMBA SOW
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
