@@ -1,5 +1,5 @@
 
-# The model interface API is runned on docker.\n
+# The model interface API is runned on docker.
 ## To run the model all you need to do is:
 ## 1. Clone the source code
 ## 2. Navigate the forder 
