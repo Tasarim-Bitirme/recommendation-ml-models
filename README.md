@@ -5,9 +5,9 @@
 ## 2. Navigate the interface forder 
 ## 3. Run the docker by the following:
 # 3-a. Build the docker image by this command:
-`docker build -t image-name .`
+`docker build -t hybrid-recommendation-image .`
 # 3-b. Create a container for the image and run it:
-`docker run -d -p 80:80 --name container-name image-name`
+`docker run -d -p 8001:80 --name hybrid-recommendation-container hybrid-recommendation-image`
 
 
 ## How to use the API:
